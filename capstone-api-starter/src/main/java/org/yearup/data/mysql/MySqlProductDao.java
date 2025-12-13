@@ -76,16 +76,27 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 
             while (row.next())
             {
-                Product product = mapRow(row);
+                int id = row.getInt(1);
+                String name = row.getString(2);
+                BigDecimal price = row.getBigDecimal(3);
+                int catId = row.getInt(4);
+                String description = row.getString(5);
+                String subCat = row.getString(6);
+                int stock = row.getInt(8);
+                boolean featured = row.getBoolean(9);
+                String img = row.getString(7);
+
+                Product product = new Product(id,name,price,catId,description,subCat,stock,featured,img);
                 products.add(product);
             }
+            return products;
         }
         catch (SQLException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error retrieving products by Category ID" + e);
+            e.printStackTrace();
         }
-
-        return products;
+        return null;
     }
 
 
