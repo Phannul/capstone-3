@@ -40,10 +40,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error Retrieving all Categories " + e);
-            e.printStackTrace();
+            throw new RuntimeException("Error Retrieving all Categories ");
         }
-        return null;
     }
 
     @Override
@@ -67,9 +65,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 return new Category(id, name, description);
             }
         } catch (SQLException e) {
-            System.out.println("Error Retrieving Category by ID");
+            throw new RuntimeException("Error Retrieving Category by ID");
         }
-        return null;
     }
 
     @Override
@@ -92,13 +89,13 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             int row = preparedStatement.executeUpdate();
             System.out.println(row);
             if (row != 1) {
-                System.err.println("Failed to insert the Intended amount of rows");
+                throw new RuntimeException("Failed to insert the Intended amount of rows");
             }
             return category;
         } catch (SQLException e) {
-            System.err.println("Error on Creating a new Category");
+            throw new RuntimeException("\"Error on Creating a new Category\"");
         }
-        return null;
+
     }
 
     @Override
@@ -116,7 +113,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             preparedStatement.setInt(3, categoryId);
             int row = preparedStatement.executeUpdate();
             if (row != 1) {
-                System.err.println("More or Less than expected records updated");
+                throw new RuntimeException("More or Less than expected records updated");
             }
         } catch (SQLException e) {
             System.err.println("Error on Updating A Record");
@@ -134,7 +131,10 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         try(Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setInt(1,categoryId);
-            preparedStatement.executeUpdate();
+            int row = preparedStatement.executeUpdate();
+            if (row != 1){
+                throw new RuntimeException("Error deleting a category");
+            }
         }catch (SQLException e){
             System.err.println("Error on deleting a record");
         }
