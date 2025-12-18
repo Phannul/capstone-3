@@ -45,7 +45,7 @@ public class CategoriesController {
         // get the category by id
         try {
             return categoryDao.getById(id);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
@@ -63,9 +63,13 @@ public class CategoriesController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addCategory(@RequestBody Category category) {
+    public Category addCategory(@RequestBody Category category) {
         // insert the category
-        categoryDao.create(category);
+        try {
+            return categoryDao.create(category);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId

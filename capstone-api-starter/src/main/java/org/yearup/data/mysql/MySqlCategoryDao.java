@@ -80,16 +80,15 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
              PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getDescription());
+            int row = preparedStatement.executeUpdate();
             try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
                 if (keys.next()) {
                     int newId = keys.getInt(1);
                     category.setCategoryId(newId);
                 }
             }
-            int row = preparedStatement.executeUpdate();
-            System.out.println(row);
             if (row != 1) {
-                throw new RuntimeException("Failed to insert the Intended amount of rows");
+                System.err.println("Failed to insert the Intended amount of rows");
             }
             return category;
         } catch (SQLException e) {

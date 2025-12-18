@@ -21,7 +21,7 @@ import java.sql.SQLException;
 // convert this class to a REST controller
 // only logged in users should have access to these actions
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("cart")
 public class ShoppingCartController
 {
     // a shopping cart requires
