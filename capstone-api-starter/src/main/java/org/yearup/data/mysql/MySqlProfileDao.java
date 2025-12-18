@@ -8,21 +8,17 @@ import javax.sql.DataSource;
 import java.sql.*;
 
 @Component
-public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
-{
-    public MySqlProfileDao(DataSource dataSource)
-    {
+public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
+    public MySqlProfileDao(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public Profile create(Profile profile)
-    {
+    public Profile create(Profile profile) {
         String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try(Connection connection = getConnection())
-        {
+        try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, profile.getUserId());
             ps.setString(2, profile.getFirstName());
@@ -37,23 +33,23 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             ps.executeUpdate();
 
             return profile;
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public Profile getByUserId(int userId){
+
+    @Override
+    public Profile getByUserId(int userId) {
         String sql = """
                 SELECT *
                 FROM profiles
                 WHERE user_id = ?;
                 """;
-        try(Connection connection = getConnection();
-        PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setInt(1,userId);
-            try(ResultSet row = ps.executeQuery()){
-                if(row.next()){
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet row = ps.executeQuery()) {
+                if (row.next()) {
                     int id = row.getInt(1);
                     String firstName = row.getString(2);
                     String lastName = row.getString(3);
@@ -63,17 +59,43 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
                     String city = row.getString(7);
                     String state = row.getString(8);
                     String zip = row.getString(9);
-                    Profile profile = new Profile(id,firstName,lastName,phone,email,address,city,state,zip);
+                    Profile profile = new Profile(id, firstName, lastName, phone, email, address, city, state, zip);
                     return profile;
                 }
             }
-        return null;
-        }catch(Exception e){
+            return null;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public void update(Profile profile){
 
+    @Override
+    public Profile update(Profile profile) {
+        String sql = "UPDATE profiles SET first_name = ?, last_name = ? , phone = ?, email = ?, address = ?, " +
+                " city = ?, state = ?, zip = ? " +
+                "WHERE user_id = ?;";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            preparedStatement.setString(1, profile.getFirstName());
+            preparedStatement.setString(2, profile.getLastName());
+            preparedStatement.setString(3, profile.getPhone());
+            preparedStatement.setString(4, profile.getEmail());
+            preparedStatement.setString(5, profile.getAddress());
+            preparedStatement.setString(6, profile.getCity());
+            preparedStatement.setString(7, profile.getState());
+            preparedStatement.setString(8, profile.getZip());
+            preparedStatement.setInt(9, profile.getUserId());
+
+            int row = preparedStatement.executeUpdate();
+            if (row == 0) {
+                return null;
+            }
+            return profile;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("error updating profile" + e);
+        }
     }
 
 }
