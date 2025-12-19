@@ -13,14 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+//Annotation to make this class a bean
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
     @Autowired
     public MySqlCategoryDao(DataSource dataSource) {
         super(dataSource);
     }
-
+    //Implements the Method to retrieve all the categories
     @Override
     public List<Category> getAllCategories() {
         // get all categories
@@ -43,7 +43,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             throw new RuntimeException("Error Retrieving all Categories ");
         }
     }
-
+    //a method to retrieve a category by ID
     @Override
     public Category getById(int categoryId) {
         // get category by id
@@ -68,7 +68,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             throw new RuntimeException("Error Retrieving Category by ID");
         }
     }
-
+    // a method to create a category
     @Override
     public Category create(Category category) {
         // create a new category
@@ -96,7 +96,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         }
 
     }
-
+    // A method to update an existing category
     @Override
     public void update(int categoryId, Category category) {
         // update category
@@ -119,7 +119,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             e.printStackTrace();
         }
     }
-
+    // a method to delete a category
     @Override
     public void delete(int categoryId) {
         // delete category

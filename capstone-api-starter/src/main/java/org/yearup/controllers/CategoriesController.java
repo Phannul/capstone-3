@@ -14,10 +14,7 @@ import org.yearup.models.Product;
 
 import java.util.List;
 
-// add the annotations to make this a REST controller
-// add the annotation to make this controller the endpoint for the following url
-// http://localhost:8080/categories
-// add annotation to allow cross site origin requests
+//Added annotation to make it a REST controller, have a general request mapping system for the class and allows cross site origin requests
 @RestController
 @RequestMapping("categories")
 @CrossOrigin
@@ -25,21 +22,19 @@ public class CategoriesController {
     private CategoryDao categoryDao;
     private ProductDao productDao;
 
-    // create an Autowired controller to inject the categoryDao and ProductDao
+    // Autowired annotation to mke the code explicit and know that spring is automatically doing all of the dirty works
     @Autowired
     public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
         this.categoryDao = categoryDao;
         this.productDao = productDao;
     }
-
-    // add the appropriate annotation for a get action
+    // Using the get method to retrieve desired informations
     @GetMapping
     public List<Category> getAll() {
         // find and return all categories
         return categoryDao.getAllCategories();
     }
-
-    // add the appropriate annotation for a get action
+    // Using the get method and adding a feature to demand more information for the sake of more specific data retrival
     @GetMapping("{id}")
     public Category getById(@PathVariable int id) {
         // get the category by id
@@ -50,16 +45,14 @@ public class CategoriesController {
         }
     }
 
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
+    // gets all the products in a specific category
     @GetMapping("{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId) {
         // get a list of product by categoryId
         return productDao.listByCategoryId(categoryId);
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
+    // A method to create new category from the front end only granting the power for admins and responding the result stat
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,8 +65,7 @@ public class CategoriesController {
         }
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    // A method to update a category from the front end only granting the power for admins and responding the result stat
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
@@ -82,8 +74,7 @@ public class CategoriesController {
     }
 
 
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    // A method to delete an unwanted category from the front end only granting the power for admins and responding the result stat
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

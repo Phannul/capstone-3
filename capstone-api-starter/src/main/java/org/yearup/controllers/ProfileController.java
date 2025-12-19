@@ -15,13 +15,12 @@ import java.security.Principal;
 public class ProfileController {
     private ProfileDao profileDao;
     private UserDao userDao;
-
     @Autowired
     public ProfileController(ProfileDao profileDao, UserDao userDao) {
         this.profileDao = profileDao;
         this.userDao = userDao;
     }
-
+    // a method to get the loggedin user
     @GetMapping
     public Profile getProfile(Principal principal) {
         String name = principal.getName();
@@ -29,7 +28,7 @@ public class ProfileController {
         Profile profile = profileDao.getByUserId(user.getId());
         return profile;
     }
-
+    // a method to update the information of the logged in user
     @PutMapping
     public Profile updateProfile(Principal principal, @RequestBody Profile profile){
         String username = principal.getName();

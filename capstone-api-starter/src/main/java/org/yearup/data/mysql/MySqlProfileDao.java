@@ -37,7 +37,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
             throw new RuntimeException(e);
         }
     }
-
+    // a method to get a profile by user id
     @Override
     public Profile getByUserId(int userId) {
         String sql = """
@@ -68,7 +68,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
             throw new RuntimeException(e);
         }
     }
-
+    // a method to update an existing profile
     @Override
     public Profile update(Profile profile) {
         String sql = "UPDATE profiles SET first_name = ?, last_name = ? , phone = ?, email = ?, address = ?, " +
